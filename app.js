@@ -62,11 +62,17 @@ const AddRecipeButton = React.createClass({
     });
   },
   handleChange(e) {
-    this.setState({ value: e.target.value });
+    this.setState({
+      title: e.target.title,
+      ingredients: e.target.ingredients
+    });
   },
   handleSaveClick(){
-    var recipe={title:this.state.title,ingredients: this.state.ingredients};
-    this.props.onSave(recipe)
+    var recipe={title:this.state.title,ingredients:this.state.ingredients,id:this.state.id};
+    this.props.onSave(recipe);
+    this.setState({
+      recipe:this.state.recipe.concat(recipe)
+    });
 },
   render() {
 
@@ -86,19 +92,21 @@ const AddRecipeButton = React.createClass({
           <Modal.Header closeButton>
             <Modal.Title>Recipe</Modal.Title>
             <FormControl
+              id='titleRecipe'
               type="text"
-              value={this.state.value}
+              value={this.title}
               placeholder="Enter text"
               onChange={this.handleChange}
               />
             <FormControl.Feedback />
           </Modal.Header>
           <Modal.Body>
-            <h4>Ingridients</h4>
+            <h4>Ingredients</h4>
             <FormControl
+              id='ingrRecipe'
               type="text"
-              value={this.state.value}
-              placeholder="Enter ingrients throuh coma"
+              value={this.ingredients}
+              placeholder="Enter ingredients through coma"
               onChange={this.handleChange}
               />
             <FormControl.Feedback />
@@ -113,10 +121,42 @@ const AddRecipeButton = React.createClass({
   }
 });
 var RecipeList=React.createClass({
+  //getInitialState(){
+  //  return {
+  //    showRecipe: false
+  //  };
+  //},
+  //onEdit(title, ingredients,id) {
+  //  var recipes = this.state.recipes;
+  //  var newRecipe = {
+  //    title:title,
+  //    ingredients:ingredients.split(','),
+  //    id:id
+  //  };
+  //  var i = recipes.find(id);
+  //  recipes.splice(i, 1, newRecipe);
+  //  console.log("edit: ", recipes);
+  //  this.setState({
+  //    recipes: recipes
+  //  });
+  //},
+  //onDelete(e) {
+  //  var recipes=this.state.recipes;
+  //  recipes.splice(e.target.id, 1);
+  //  this.setState({
+  //    recipes:recipes
+  //  });
+  //},
   render:function(){
     var recipes=this.props.recipes.map(function(recipe){
-      return (<Panel header={recipe.title} eventKey={recipe.id}>{recipe.ingredients}</Panel>)
-    });
+      return (
+        <Panel header={recipe.title} eventKey={recipe.id} >
+          {recipe.ingredients}
+         <p><Button >Edit</Button>
+            <Button >Delete</Button></p>
+          </Panel>
+      )
+      });
     return (<div>
       <Accordion>
         {recipes}
@@ -135,7 +175,15 @@ var RecipeApp = React.createClass({
     return {recipes:baseOfRecipes}
   },
   handleNewRecipe(recipe){
-    alert(recipe)
+    this.setState({
+      recipes:this.state.recipes.concat(recipe)
+    });
+  },
+  handleEdit(){
+
+  },
+  handleDelete(){
+
   },
  render:function(){
    return (<div>
