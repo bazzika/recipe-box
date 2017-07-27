@@ -1,10 +1,7 @@
 /**
  * Created by Даша on 19.07.2017.
  */
-var baseOfRecipes = [{ title: "Pumpkin Pie", ingredients: ["Pumpkin Puree", "Sweetened Condensed Milk", "Eggs", "Pumpkin Pie Spice", "Pie Crust"] , "id": 0},
-  { title: "Spaghetti", ingredients: ["Noodles", "Tomato Sauce", "(Optional) Meatballs"],"id": 1},
-  { title: "Onion Pie", ingredients: ["Onion", "Pie Crust", "Sounds Yummy right?"],id:2
-  }];
+
 
 var Modal = ReactBootstrap.Modal;
 var Button = ReactBootstrap.Button;
@@ -13,27 +10,29 @@ var Panel=ReactBootstrap.Panel;
 var FormControl=ReactBootstrap.FormControl;
 
 
-const Recipe = React.createClass({
+const AddRecipeButton = React.createClass({
   getInitialState() {
     return {
       showModal: false,
-      showRecipe: false
+      showRecipe: false,
+      title:null,
+      ingredients:[]
     };
   },
-  getList: function (list) {
-    if (!list) {
-      return []
-    } else {
-      const ingr = list.split(',');
-      const ingrList = [];
-      for (var i = 0; i < ingr.length; i++) {
-        ingrList.push(<li className="list-group-item">{ingr[i]}</li>);
-      }
-      return (
-        ingrList
-      )
-    }
-  },
+  //getList: function (list) {
+  //  if (!list) {
+  //    return []
+  //  } else {
+  //    const ingr = list.split(',');
+  //    const ingrList = [];
+  //    for (var i = 0; i < ingr.length; i++) {
+  //      ingrList.push(<li className="list-group-item">{ingr[i]}</li>);
+  //    }
+  //    return (
+  //      ingrList
+  //    )
+  //  }
+  //},
   //deleteRecipe: function (e) {
   //
   //
@@ -65,25 +64,15 @@ const Recipe = React.createClass({
   handleChange(e) {
     this.setState({ value: e.target.value });
   },
-
+  handleSaveClick(){
+    var recipe={title:this.state.title,ingredients: this.state.ingredients};
+    this.props.onSave(recipe)
+},
   render() {
 
 
     return (
       <div>
-        <div>
-          <Accordion>
-            <Panel header='title' id="0">
-              Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-            </Panel>
-            <Panel header="Collapsible Group Item #2" eventKey="2">
-              Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-            </Panel>
-            <Panel header="Collapsible Group Item #3" eventKey="3">
-              Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-            </Panel>
-          </Accordion>
-          </div>
 
         <Button
           bsStyle="primary"
@@ -115,6 +104,7 @@ const Recipe = React.createClass({
             <FormControl.Feedback />
           </Modal.Body>
           <Modal.Footer>
+            <Button onClick={this.handleSaveClick}>Save</Button>
             <Button onClick={this.close}>Close</Button>
           </Modal.Footer>
         </Modal>
@@ -122,20 +112,43 @@ const Recipe = React.createClass({
     );
   }
 });
+var RecipeList=React.createClass({
+  render:function(){
+    var recipes=this.props.recipes.map(function(recipe){
+      return (<Panel>{recipe.title}</Panel>)
+    })
+
+    return (<div>
+      <Accordion>
+        {recipes}
+      </Accordion>
+    </div>)
+  }
+});
 
 
+var RecipeApp = React.createClass({
+  getInitialState(){
+    var baseOfRecipes = [{ title: "Pumpkin Pie", ingredients: ["Pumpkin Puree", "Sweetened Condensed Milk", "Eggs", "Pumpkin Pie Spice", "Pie Crust"] , "id": 0},
+      { title: "Spaghetti", ingredients: ["Noodles", "Tomato Sauce", "(Optional) Meatballs"],"id": 1},
+      { title: "Onion Pie", ingredients: ["Onion", "Pie Crust", "Sounds Yummy right?"],id:2
+      }];
+    return {recipes:baseOfRecipes}
+  },
+  handleNewRecipe(recipe){
+    alert(recipe)
+  },
+ render:function(){
+   return (<div>
+            <RecipeList recipes={this.state.recipes}/>
+            <AddRecipeButton onSave={this.handleNewRecipe}/>
+          </div>)
+ }
+});
 
-//var RecipeBox = React.createClass({
-//
-//
-//
-//
-//
-//
-//});
 ReactDOM.render(
   //<Button bsStyle="primary">Primary</Button>,
-  <Recipe />,
+  <RecipeApp />,
 
   document.querySelector('.box')
 );
