@@ -115,9 +115,8 @@ const AddRecipeButton = React.createClass({
 var RecipeList=React.createClass({
   render:function(){
     var recipes=this.props.recipes.map(function(recipe){
-      return (<Panel>{recipe.title}</Panel>)
-    })
-
+      return (<Panel header={recipe.title} eventKey={recipe.id}>{recipe.ingredients}</Panel>)
+    });
     return (<div>
       <Accordion>
         {recipes}
