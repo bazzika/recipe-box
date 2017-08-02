@@ -61,18 +61,23 @@ const AddRecipeButton = React.createClass({
       showRecipe:false
     });
   },
-  handleChange(e) {
+  handleChangeTitle(e) {
     this.setState({
-      title: e.target.title,
-      ingredients: e.target.ingredients
+      title: e.target.value,
     });
   },
-  handleSaveClick(){
+  handleChangeIngredients(e) {
+    this.setState({
+      ingredients: e.target.value
+    });
+
+  },
+  handleSaveClick(event){
     var recipe={title:this.state.title,ingredients:this.state.ingredients,id:this.state.id};
     this.props.onSave(recipe);
-    this.setState({
-      recipe:this.state.recipe.concat(recipe)
-    });
+    //this.setState({
+    //  recipe:this.state.recipe.concat(recipe)
+    //});
 },
   render() {
 
@@ -96,7 +101,7 @@ const AddRecipeButton = React.createClass({
               type="text"
               value={this.title}
               placeholder="Enter text"
-              onChange={this.handleChange}
+              onChange={this.handleChangeTitle}
               />
             <FormControl.Feedback />
           </Modal.Header>
@@ -107,7 +112,7 @@ const AddRecipeButton = React.createClass({
               type="text"
               value={this.ingredients}
               placeholder="Enter ingredients through coma"
-              onChange={this.handleChange}
+              onChange={this.handleChangeIngredients}
               />
             <FormControl.Feedback />
           </Modal.Body>
@@ -126,19 +131,21 @@ var RecipeList=React.createClass({
   //    showRecipe: false
   //  };
   //},
-  //onEdit(title, ingredients,id) {
-  //  var recipes = this.state.recipes;
-  //  var newRecipe = {
-  //    title:title,
-  //    ingredients:ingredients.split(','),
-  //    id:id
-  //  };
-  //  var i = recipes.find(id);
-  //  recipes.splice(i, 1, newRecipe);
-  //  console.log("edit: ", recipes);
-  //  this.setState({
-  //    recipes: recipes
-  //  });
+  //editRecipe() {
+  //  //var recipes = this.state.recipes;
+  //var recipe={title:this.state.title,ingredients:[this.state.ingredients],id:this.state.id};
+  //this.props.onEdit(recipe);
+  //  ////var newRecipe = {
+  //  ////  title:title,
+  //  ////  ingredients:ingredients.split(','),
+  //  ////  id:id
+  //  ////};
+  //  //var i = recipe.find(id);
+  //  //recipe.splice(i, 1, newRecipe);
+  //  //console.log("edit: ", recipe);
+  //  //this.setState({
+  //  //  recipe: recipe
+  //  //});
   //},
   //onDelete(e) {
   //  var recipes=this.state.recipes;
@@ -150,9 +157,9 @@ var RecipeList=React.createClass({
   render:function(){
     var recipes=this.props.recipes.map(function(recipe){
       return (
-        <Panel header={recipe.title} eventKey={recipe.id} >
+        <Panel header={recipe.title} eventKey={recipe.id}>
           {recipe.ingredients}
-         <p><Button >Edit</Button>
+         <p><Button>Edit</Button>
             <Button >Delete</Button></p>
           </Panel>
       )
@@ -172,23 +179,32 @@ var RecipeApp = React.createClass({
       { title: "Spaghetti", ingredients: ["Noodles", "Tomato Sauce", "(Optional) Meatballs"],"id": 1},
       { title: "Onion Pie", ingredients: ["Onion", "Pie Crust", "Sounds Yummy right?"],id:2
       }];
-    return {recipes:baseOfRecipes}
+    return {
+      recipes:baseOfRecipes,
+      counter:3
+    }
   },
   handleNewRecipe(recipe){
+
     this.setState({
       recipes:this.state.recipes.concat(recipe)
     });
   },
-  handleEdit(){
-
+  handleEdit(recipe){
+    //var i = recipe.find(id);
+    //recipes.splice(i, 1, recipe);
+    //
+    //this.setState({
+    //  recipes:this.state.recipes.concat(recipe)
+    //});
   },
   handleDelete(){
 
   },
  render:function(){
    return (<div>
-            <RecipeList recipes={this.state.recipes}/>
-            <AddRecipeButton onSave={this.handleNewRecipe}/>
+            <RecipeList recipes={this.state.recipes} />
+            <AddRecipeButton onSave={this.handleNewRecipe} />
           </div>)
  }
 });
