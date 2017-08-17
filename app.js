@@ -19,35 +19,6 @@ const AddRecipeButton = React.createClass({
       ingredients:[]
     };
   },
-  //getList: function (list) {
-  //  if (!list) {
-  //    return []
-  //  } else {
-  //    const ingr = list.split(',');
-  //    const ingrList = [];
-  //    for (var i = 0; i < ingr.length; i++) {
-  //      ingrList.push(<li className="list-group-item">{ingr[i]}</li>);
-  //    }
-  //    return (
-  //      ingrList
-  //    )
-  //  }
-  //},
-  //deleteRecipe: function (e) {
-  //
-  //
-  //  this.setState({
-  //    showModal: false
-  //  });
-  //},
-  //editRecipe:function () {
-  //
-  //
-  //  });
-  //},
-  //saveEditions: function (e) {
-  //
-  //},
   close() {
     this.setState({
       showModal: false,
@@ -63,21 +34,19 @@ const AddRecipeButton = React.createClass({
   },
   handleChangeTitle(e) {
     this.setState({
-      title: e.target.value,
+      title: e.target.value
     });
   },
   handleChangeIngredients(e) {
     this.setState({
-      ingredients: e.target.value
+      ingredients: e.target.value.split(',')
     });
 
   },
-  handleSaveClick(event){
+  handleSaveClick(e){
     var recipe={title:this.state.title,ingredients:this.state.ingredients,id:this.state.id};
     this.props.onSave(recipe);
-    //this.setState({
-    //  recipe:this.state.recipe.concat(recipe)
-    //});
+
 },
   render() {
 
@@ -125,43 +94,73 @@ const AddRecipeButton = React.createClass({
     );
   }
 });
+
+var Recipe=React.createClass({
+  getInitialState(){
+    return {
+      showRecipe: false,
+      showModal:false
+    };
+  },
+  editRecipe(){
+    this.props.onEdit(this.props.recipe);
+    this.setState({
+      showModal:true
+    })
+  },
+  deleteRecipe(recipe) {
+    //var recipe={title:this.state.title,ingredients:this.state.ingredients,id:this.state.id};
+    this.props.onDelete(this.props.recipe);
+    this.setState({
+      showRecipe:false
+    })
+  },
+    getListIngredients() {
+      let listResult=this.props.recipe.ingredients;
+      if (!listResult) {
+        listResult = []
+      }else{
+        const ingredients = this.props.recipe.ingredients;
+        const ingredientsList = [];
+        for (var i = 0; i < ingredients.length; i++) {
+          ingredientsList.push(<li className="list-group-item">{ingredients[i]}</li>);
+        }
+        listResult = ingredientsList
+      }
+      return listResult;
+  },
+  render(){
+    const listIngredients = this.getListIngredients();
+
+    return (
+      <Panel header={this.props.recipe.title} eventKey={this.props.recipe.id} >
+       <ul className='list-group'> {listIngredients}</ul>
+        <p>
+          <Button onClick={this.editRecipe}>Edit</Button></p>
+        <p>
+          <Button onClick={this.deleteRecipe}>Delete</Button></p>
+      </Panel>
+    )
+
+  }
+
+});
 var RecipeList=React.createClass({
-  //getInitialState(){
-  //  return {
-  //    showRecipe: false
-  //  };
-  //},
+  getInitialState(){
+    return {
+      showRecipe: false
+    };
+  },
   //editRecipe() {
-  //  //var recipes = this.state.recipes;
-  //var recipe={title:this.state.title,ingredients:[this.state.ingredients],id:this.state.id};
+  //var recipe={title:this.state.title,ingredients:this.state.ingredients,id:this.state.id};
   //this.props.onEdit(recipe);
-  //  ////var newRecipe = {
-  //  ////  title:title,
-  //  ////  ingredients:ingredients.split(','),
-  //  ////  id:id
-  //  ////};
-  //  //var i = recipe.find(id);
-  //  //recipe.splice(i, 1, newRecipe);
-  //  //console.log("edit: ", recipe);
-  //  //this.setState({
-  //  //  recipe: recipe
-  //  //});
   //},
-  //onDelete(e) {
-  //  var recipes=this.state.recipes;
-  //  recipes.splice(e.target.id, 1);
-  //  this.setState({
-  //    recipes:recipes
-  //  });
-  //},
-  render:function(){
-    var recipes=this.props.recipes.map(function(recipe){
+
+  render(){
+    var recipes=this.props.recipes.map((recipe)=> {
       return (
-        <Panel header={recipe.title} eventKey={recipe.id}>
-          {recipe.ingredients}
-         <p><Button>Edit</Button>
-            <Button >Delete</Button></p>
-          </Panel>
+        <Recipe recipe={recipe} onDelete={this.props.onDelete} keyDel={recipe.id}/>
+        //<Recipe recipe={recipe} onEdit={this.props.onEdit} keyEd={recipe.id} />
       )
       });
     return (<div>
@@ -181,29 +180,42 @@ var RecipeApp = React.createClass({
       }];
     return {
       recipes:baseOfRecipes,
-      counter:3
+      showRecipe:false
     }
   },
   handleNewRecipe(recipe){
 
     this.setState({
       recipes:this.state.recipes.concat(recipe)
+
     });
   },
-  handleEdit(recipe){
-    //var i = recipe.find(id);
-    //recipes.splice(i, 1, recipe);
-    //
-    //this.setState({
-    //  recipes:this.state.recipes.concat(recipe)
-    //});
-  },
-  handleDelete(){
 
+  handleEdit(recipe){
+    var recipes=this.state.recipes;
+    var index = recipe.id;
+    this.state.recipes.splice(index, 1, recipe);
+
+    this.setState({
+      recipes:recipes
+    });
+  },
+  handleDelete(recipe){
+    var recipes=this.state.recipes;
+    var index=recipe.id;
+    if (recipes.length>1) {
+      recipes.splice(index, 1);
+    } else {
+      recipes=[];
+    }
+    this.setState({
+      recipes:recipes,
+      showRecipe:false
+    })
   },
  render:function(){
    return (<div>
-            <RecipeList recipes={this.state.recipes} />
+            <RecipeList recipes={this.state.recipes} onEdit={this.handleEdit} onDelete={this.handleDelete}/>
             <AddRecipeButton onSave={this.handleNewRecipe} />
           </div>)
  }
