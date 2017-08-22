@@ -10,27 +10,24 @@ var Panel=ReactBootstrap.Panel;
 var FormControl=ReactBootstrap.FormControl;
 
 
-const AddRecipeButton = React.createClass({
+const RecipeDialog = React.createClass({
   getInitialState() {
+    if (this.props.recipe) {
+      return{
+        title:this.props.recipe.title,
+        ingredients:this.props.recipe.ingredients
+      }
+    }
     return {
-      showModal: false,
-      showRecipe: false,
       title:null,
       ingredients:[]
     };
   },
   close() {
-    this.setState({
-      showModal: false,
-      showRecipe: false
-    });
+      this.props.onClose();
   },
 
   open() {
-    this.setState({
-      showModal: true,
-      showRecipe:false
-    });
   },
   handleChangeTitle(e) {
     this.setState({
@@ -50,25 +47,17 @@ const AddRecipeButton = React.createClass({
 },
   render() {
 
-
     return (
       <div>
 
-        <Button
-          bsStyle="primary"
-          bsSize="large"
-          onClick={this.open}
-          >
-          Add recipe
-        </Button>
 
-        <Modal show={this.state.showModal} onHide={this.close}>
+        <Modal show={this.props.showModal} >
           <Modal.Header closeButton>
-            <Modal.Title>Recipe</Modal.Title>
+            <Modal.Title>{this.props.title}</Modal.Title>
             <FormControl
               id='titleRecipe'
               type="text"
-              value={this.title}
+              value={this.state.title}
               placeholder="Enter text"
               onChange={this.handleChangeTitle}
               />
@@ -79,7 +68,7 @@ const AddRecipeButton = React.createClass({
             <FormControl
               id='ingrRecipe'
               type="text"
-              value={this.ingredients}
+              value={this.state.ingredients}
               placeholder="Enter ingredients through coma"
               onChange={this.handleChangeIngredients}
               />
@@ -102,10 +91,11 @@ var Recipe=React.createClass({
       showModal:false
     };
   },
-  editRecipe(){
+  editRecipe(recipe){
     this.props.onEdit(this.props.recipe);
     this.setState({
-      showModal:true
+      showModal:true,
+      showRecipe:false
     })
   },
   deleteRecipe(recipe) {
@@ -159,8 +149,7 @@ var RecipeList=React.createClass({
   render(){
     var recipes=this.props.recipes.map((recipe)=> {
       return (
-        <Recipe recipe={recipe} onDelete={this.props.onDelete} keyDel={recipe.id}/>
-        //<Recipe recipe={recipe} onEdit={this.props.onEdit} keyEd={recipe.id} />
+        <Recipe recipe={recipe} onDelete={this.props.onDelete} onEdit={this.props.onEdit} keyDel={recipe.id} />
       )
       });
     return (<div>
@@ -180,8 +169,15 @@ var RecipeApp = React.createClass({
       }];
     return {
       recipes:baseOfRecipes,
-      showRecipe:false
+      showAddRecipe:false,
+      showEditRecipe:false
     }
+  },
+
+  openAddRecipe() {
+    this.setState({
+      showAddRecipe:true
+    });
   },
   handleNewRecipe(recipe){
 
@@ -191,12 +187,12 @@ var RecipeApp = React.createClass({
     });
   },
 
-  handleEdit(recipe){
+  handleEditRecipe(recipe){
     var recipes=this.state.recipes;
     var index = recipe.id;
-    this.state.recipes.splice(index, 1, recipe);
-
+    recipes.splice(index, 1, recipe);
     this.setState({
+      showEditRecipe:true,
       recipes:recipes
     });
   },
@@ -210,13 +206,34 @@ var RecipeApp = React.createClass({
     }
     this.setState({
       recipes:recipes,
-      showRecipe:false
+      showAddRecipe:false
     })
   },
+  handleAddClose(){
+    this.setState({
+      showAddRecipe:false
+    })
+  },
+  handleEditClose(){
+    this.setState({
+      showAddRecipe:false
+    })
+  },
+
  render:function(){
    return (<div>
-            <RecipeList recipes={this.state.recipes} onEdit={this.handleEdit} onDelete={this.handleDelete}/>
-            <AddRecipeButton onSave={this.handleNewRecipe} />
+            <RecipeList recipes={this.state.recipes} onEdit={this.handleEditRecipe} onDelete={this.handleDelete}/>
+     <Button
+       bsStyle="primary"
+       bsSize="large"
+       onClick={this.openAddRecipe}
+       >
+       Add recipe
+     </Button>
+
+     <RecipeDialog showModal={this.state.showAddRecipe} title='Add recipe' onSave={this.handleNewRecipe} onClose={this.handleAddClose}/>,
+     <RecipeDialog showModal={this.state.showEditRecipe} title='Edit recipe' onSave={this.handleEditRecipe} onClose={this.handleEditClose} recipe={this.state.recipe}/>
+
           </div>)
  }
 });
