@@ -12,15 +12,8 @@ var FormControl=ReactBootstrap.FormControl;
 
 const RecipeDialog = React.createClass({
   getInitialState() {
-      if (this.props.recipe) {
-        return {
-          title: this.props.recipe.title,
-          ingredients: this.props.recipe.ingredients,
-          showModal:true
-        }
-      }
       return {
-        title: null,
+        title: '',
         ingredients: [],
         showModal:true
       };
@@ -33,9 +26,9 @@ const RecipeDialog = React.createClass({
       })
   },
 
-  open() {
-
-  },
+  //open() {
+  //
+  //},
   handleChangeTitle(e) {
     this.setState({
       title: e.target.value
@@ -55,14 +48,29 @@ const RecipeDialog = React.createClass({
       title:'',
       ingredients:[]
     })
+    this.props.onClose();
 
 },
-  render() {
+  componentWillReceiveProps(nextProps){
+    if (nextProps.recipe !== this.props.recipe) {
+      this.setState({
+        title: nextProps.recipe.title,
+        ingredients:nextProps.recipe.ingredients,
+        id:nextProps.recipe.id
+      })
 
+    }
+  },
+  render() {
+  //let recipe=this.props.recipe;
+  //  if (!recipe) {
+  //    recipe= {
+  //      title: '',
+  //      ingredients: []
+  //    }
+  //  }
     return (
       <div>
-
-
         <Modal show={this.props.showModal} onHide={this.close} >
           <Modal.Header closeButton>
             <Modal.Title>{this.props.title}</Modal.Title>
@@ -87,7 +95,7 @@ const RecipeDialog = React.createClass({
             <FormControl.Feedback />
           </Modal.Body>
           <Modal.Footer>
-            <Button onClick={this.handleSaveClick}>{this.props.title}</Button>
+            <Button onClick={this.handleSaveClick} >{this.props.title}</Button>
             <Button onClick={this.close}>Close</Button>
           </Modal.Footer>
         </Modal>
@@ -97,18 +105,16 @@ const RecipeDialog = React.createClass({
 });
 
 var Recipe=React.createClass({
-  //getInitialState(){
-  //  return {
-  //    showRecipe: false,
-  //    showModal:false
-  //  };
-  //},
+  getInitialState(){
+    return {
+      showModal:false
+    };
+  },
   editRecipe(recipe){
     this.props.onEdit(this.props.recipe);
-    //this.setState({
-    //  showModal:true,
-    //  showRecipe:false
-    //})
+    this.setState({
+      showModal:false
+    })
   },
   deleteRecipe(recipe) {
     //var recipe={title:this.state.title,ingredients:this.state.ingredients,id:this.state.id};
@@ -148,11 +154,11 @@ var Recipe=React.createClass({
 
 });
 var RecipeList=React.createClass({
-  getInitialState(){
-    return {
-      showRecipe: false
-    };
-  },
+  //getInitialState(){
+  //  return {
+  //    showRecipe: false
+  //  };
+  //},
 
   render(){
     var recipes=this.props.recipes.map((recipe)=> {
@@ -184,11 +190,12 @@ var RecipeApp = React.createClass({
 
   openAddRecipe() {
     this.setState({
-      showAddRecipe:true
+      showAddRecipe:true,
+      showEditRecipe:false
     });
   },
   handleNewRecipe(recipe){
-
+    recipe.id=this.state.recipes.length;
     this.setState({
       recipes:this.state.recipes.concat(recipe)
 
@@ -202,7 +209,8 @@ var RecipeApp = React.createClass({
     this.setState({
       showEditRecipe:true,
       showAddRecipe:false,
-      recipes:recipes
+      recipes:recipes,
+      recipe:recipe
     });
   },
   handleDelete(recipe){
@@ -215,17 +223,20 @@ var RecipeApp = React.createClass({
     }
     this.setState({
       recipes:recipes,
-      showAddRecipe:false
+      showAddRecipe:false,
+      showEditRecipe:false
     })
   },
   handleAddClose(){
     this.setState({
-      showAddRecipe:false
+      showAddRecipe:false,
+      showEditRecipe:false
     })
   },
   handleEditClose(){
     this.setState({
-      showEditRecipe:false
+      showEditRecipe:false,
+      showAddRecipe:false
     })
   },
 
