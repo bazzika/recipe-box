@@ -12,8 +12,7 @@ var FormControl=ReactBootstrap.FormControl;
 
 const RecipeDialog = React.createClass({
   getInitialState() {
-    var recipe=this.props.recipe;
-      if (recipe) {
+      if (this.props.recipe) {
         return {
           title: this.props.recipe.title,
           ingredients: this.props.recipe.ingredients,
@@ -52,7 +51,9 @@ const RecipeDialog = React.createClass({
     var recipe={title:this.state.title,ingredients:this.state.ingredients,id:this.state.id};
     this.props.onSave(recipe);
     this.setState({
-      showModal:false
+      showModal:false,
+      title:'',
+      ingredients:[]
     })
 
 },
@@ -116,7 +117,7 @@ var Recipe=React.createClass({
     //  showRecipe:false
     //})
   },
-    getListIngredients() {
+    getListIngredients(recipe) {
       let listResult=this.props.recipe.ingredients;
       if (!listResult) {
         listResult = []
@@ -152,10 +153,6 @@ var RecipeList=React.createClass({
       showRecipe: false
     };
   },
-  //editRecipe() {
-  //var recipe={title:this.state.title,ingredients:this.state.ingredients,id:this.state.id};
-  //this.props.onEdit(recipe);
-  //},
 
   render(){
     var recipes=this.props.recipes.map((recipe)=> {
