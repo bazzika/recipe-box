@@ -12,17 +12,19 @@ var FormControl=ReactBootstrap.FormControl;
 
 const RecipeDialog = React.createClass({
   getInitialState() {
-    if (this.props.recipe) {
-      return{
-        title:this.props.recipe.title,
-        ingredients:this.props.recipe.ingredients
+    var recipe=this.props.recipe;
+      if (recipe) {
+        return {
+          title: this.props.recipe.title,
+          ingredients: this.props.recipe.ingredients
+        }
       }
-    }
-    return {
-      title:null,
-      ingredients:[]
-    };
-  },
+      return {
+        title: null,
+        ingredients: []
+      };
+    },
+
   close() {
       this.props.onClose();
   },
@@ -51,7 +53,7 @@ const RecipeDialog = React.createClass({
       <div>
 
 
-        <Modal show={this.props.showModal} >
+        <Modal show={this.props.showModal} onHide={this.close} >
           <Modal.Header closeButton>
             <Modal.Title>{this.props.title}</Modal.Title>
             <FormControl
@@ -193,6 +195,7 @@ var RecipeApp = React.createClass({
     recipes.splice(index, 1, recipe);
     this.setState({
       showEditRecipe:true,
+      showAddRecipe:false,
       recipes:recipes
     });
   },
@@ -216,7 +219,7 @@ var RecipeApp = React.createClass({
   },
   handleEditClose(){
     this.setState({
-      showAddRecipe:false
+      showEditRecipe:false
     })
   },
 
