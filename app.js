@@ -16,20 +16,26 @@ const RecipeDialog = React.createClass({
       if (recipe) {
         return {
           title: this.props.recipe.title,
-          ingredients: this.props.recipe.ingredients
+          ingredients: this.props.recipe.ingredients,
+          showModal:true
         }
       }
       return {
         title: null,
-        ingredients: []
+        ingredients: [],
+        showModal:true
       };
     },
 
   close() {
       this.props.onClose();
+      this.setState({
+        showModal:false
+      })
   },
 
   open() {
+
   },
   handleChangeTitle(e) {
     this.setState({
@@ -45,6 +51,9 @@ const RecipeDialog = React.createClass({
   handleSaveClick(e){
     var recipe={title:this.state.title,ingredients:this.state.ingredients,id:this.state.id};
     this.props.onSave(recipe);
+    this.setState({
+      showModal:false
+    })
 
 },
   render() {
@@ -68,7 +77,7 @@ const RecipeDialog = React.createClass({
           <Modal.Body>
             <h4>Ingredients</h4>
             <FormControl
-              id='ingrRecipe'
+              id='ingredientsRecipe'
               type="text"
               value={this.state.ingredients}
               placeholder="Enter ingredients through coma"
@@ -77,7 +86,7 @@ const RecipeDialog = React.createClass({
             <FormControl.Feedback />
           </Modal.Body>
           <Modal.Footer>
-            <Button onClick={this.handleSaveClick}>Save</Button>
+            <Button onClick={this.handleSaveClick}>{this.props.title}</Button>
             <Button onClick={this.close}>Close</Button>
           </Modal.Footer>
         </Modal>
@@ -87,25 +96,25 @@ const RecipeDialog = React.createClass({
 });
 
 var Recipe=React.createClass({
-  getInitialState(){
-    return {
-      showRecipe: false,
-      showModal:false
-    };
-  },
+  //getInitialState(){
+  //  return {
+  //    showRecipe: false,
+  //    showModal:false
+  //  };
+  //},
   editRecipe(recipe){
     this.props.onEdit(this.props.recipe);
-    this.setState({
-      showModal:true,
-      showRecipe:false
-    })
+    //this.setState({
+    //  showModal:true,
+    //  showRecipe:false
+    //})
   },
   deleteRecipe(recipe) {
     //var recipe={title:this.state.title,ingredients:this.state.ingredients,id:this.state.id};
     this.props.onDelete(this.props.recipe);
-    this.setState({
-      showRecipe:false
-    })
+    //this.setState({
+    //  showRecipe:false
+    //})
   },
     getListIngredients() {
       let listResult=this.props.recipe.ingredients;
