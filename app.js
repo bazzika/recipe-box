@@ -26,9 +26,6 @@ const RecipeDialog = React.createClass({
       })
   },
 
-  //open() {
-  //
-  //},
   handleChangeTitle(e) {
     this.setState({
       title: e.target.value
@@ -47,7 +44,7 @@ const RecipeDialog = React.createClass({
       showModal:false,
       title:'',
       ingredients:[]
-    })
+    });
     this.props.onClose();
 
 },
@@ -70,10 +67,10 @@ const RecipeDialog = React.createClass({
   //    }
   //  }
     return (
-      <div>
+      <div id='showdialog'>
         <Modal show={this.props.showModal} onHide={this.close} >
           <Modal.Header closeButton>
-            <Modal.Title>{this.props.title}</Modal.Title>
+            <Modal.Title><h4 class='title'>{this.props.title}</h4></Modal.Title>
             <FormControl
               id='titleRecipe'
               type="text"
@@ -95,7 +92,7 @@ const RecipeDialog = React.createClass({
             <FormControl.Feedback />
           </Modal.Body>
           <Modal.Footer>
-            <Button onClick={this.handleSaveClick} >{this.props.title}</Button>
+            <Button bsStyle='success' onClick={this.handleSaveClick} >{this.props.title}</Button>
             <Button onClick={this.close}>Close</Button>
           </Modal.Footer>
         </Modal>
@@ -143,10 +140,8 @@ var Recipe=React.createClass({
     return (
       <Panel header={this.props.recipe.title} eventKey={this.props.recipe.id} >
        <ul className='list-group'> {listIngredients}</ul>
-        <p>
-          <Button onClick={this.editRecipe}>Edit</Button></p>
-        <p>
-          <Button onClick={this.deleteRecipe}>Delete</Button></p>
+          <Button bsStyle='info' onClick={this.editRecipe}>Edit</Button>
+          <Button bsStyle='warning' onClick={this.deleteRecipe}>Delete</Button>
       </Panel>
     )
 
@@ -241,17 +236,17 @@ var RecipeApp = React.createClass({
   },
 
  render:function(){
-   return (<div>
+   return (<div class='allrecipe'>
             <RecipeList recipes={this.state.recipes} onEdit={this.handleEditRecipe} onDelete={this.handleDelete}/>
-     <Button
-       bsStyle="primary"
+     <Button class='common'
+       bsStyle="info"
        bsSize="large"
        onClick={this.openAddRecipe}
        >
        Add recipe
      </Button>
 
-     <RecipeDialog showModal={this.state.showAddRecipe} title='Add recipe' onSave={this.handleNewRecipe} onClose={this.handleAddClose}/>,
+     <RecipeDialog showModal={this.state.showAddRecipe} title='Add recipe' onSave={this.handleNewRecipe} onClose={this.handleAddClose}/>
      <RecipeDialog showModal={this.state.showEditRecipe} title='Edit recipe' onSave={this.handleEditRecipe} onClose={this.handleEditClose} recipe={this.state.recipe}/>
 
           </div>)

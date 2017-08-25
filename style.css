@@ -1,0 +1,32 @@
+.box {
+    background-clip: content-box;
+    background-image: url("images/Kitchen.svg");
+    background-color: lightblue;
+    font-size: 30px;
+    margin-left: 20%;
+    margin-right: 20%;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    text-align: center;
+    font-family:'Handlee', serif;
+}
+.panel {
+    margin-left: 100px;
+    margin-right: 100px;
+    background-color: lightseagreen;
+    opacity: 0.95;
+}
+.panel .panel-heading {
+    background-color: lightseagreen !important; }
+li{
+    font-size: 20px;
+}
+div.Modal {
+    background-color: lightseagreen;
+}
+button {
+    font-family: sans-serif;
+}
+.title{
+    text-decoration-color: aqua;
+}
