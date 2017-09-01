@@ -89,6 +89,7 @@ const RecipeDialog = React.createClass({
               id='ingredientsRecipe'
               type="text"
               value={this.state.ingredients}
+              componentClass='textarea'
               placeholder="Enter ingredients through coma"
               onChange={this.handleChangeIngredients}
               />
@@ -166,7 +167,7 @@ var RecipeList=React.createClass({
   render(){
     var recipes=this.props.recipes.map((recipe)=> {
       return (
-        <Recipe recipe={recipe} onDelete={this.props.onDelete} onEdit={this.props.onEdit} keyDel={recipe.id} />
+        <Recipe recipe={recipe} onDelete={this.props.onDelete} onEdit={this.props.onEdit} key={recipe.id} ></Recipe>
       )
       });
     return (<div class='mainbox'>
@@ -244,9 +245,9 @@ var RecipeApp = React.createClass({
   },
 
  render:function(){
-   return (<div class='allrecipe'>
-            <RecipeList recipes={this.state.recipes} onEdit={this.handleEditRecipe} onDelete={this.handleDelete}/>
-     <Button class='common'
+   return (<div>
+            <RecipeList recipes={this.state.recipes} onEdit={this.handleEditRecipe} onDelete={this.handleDelete} />
+     <Button
        bsStyle="info"
        bsSize="large"
        onClick={this.openAddRecipe}
