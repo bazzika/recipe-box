@@ -132,7 +132,7 @@ var Recipe=React.createClass({
         const ingredients = this.props.recipe.ingredients;
         const ingredientsList = [];
         for (var i = 0; i < ingredients.length; i++) {
-          ingredientsList.push(<li className="list-group-item">{ingredients[i]}</li>);
+          ingredientsList.push(<li className="list-group-item" key={i}>{ingredients[i]}</li>);
         }
         listResult = ingredientsList
       }
@@ -165,9 +165,9 @@ var RecipeList=React.createClass({
   //},
 
   render(){
-    var recipes=this.props.recipes.map((recipe)=> {
+    var recipes=this.props.recipes.map((recipe,index)=> {
       return (
-        <Recipe recipe={recipe} onDelete={this.props.onDelete} onEdit={this.props.onEdit} key={recipe.id} ></Recipe>
+        <Recipe recipe={recipe} onDelete={this.props.onDelete} onEdit={this.props.onEdit} key={index} ></Recipe>
       )
       });
     return (<div class='mainbox'>
