@@ -5,8 +5,8 @@
     font-size: 30px;
     margin-left: 20%;
     margin-right: 20%;
-    margin-top: 50px;
-    margin-bottom: 50px;
+    margin-top: 0%;
+    margin-bottom: 0px;
     text-align: center;
     font-family:'Handlee', serif;
 }
@@ -17,16 +17,31 @@
     opacity: 0.95;
 }
 .panel .panel-heading {
-    background-color: lightseagreen !important; }
+    background-color: lightseagreen !important;
+}
 li{
     font-size: 20px;
 }
 div.Modal {
     background-color: lightseagreen;
 }
-button {
+.common {
     font-family: sans-serif;
+    margin-bottom: 30px;
 }
 .title{
     text-decoration-color: aqua;
+}
+.mainbox {
+    margin-top: 10%;
+}
+.edit{
+    margin-right: 10px;
+    padding-right: 20px;
+}
+.delete{
+    padding-left: 10px;
+}
+.between{
+    margin-right: 20px;
 }

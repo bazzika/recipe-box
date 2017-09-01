@@ -8,6 +8,7 @@ var Button = ReactBootstrap.Button;
 var Accordion = ReactBootstrap.Accordion;
 var Panel=ReactBootstrap.Panel;
 var FormControl=ReactBootstrap.FormControl;
+var ButtonGroup=ReactBootstrap.ButtonGroup;
 
 
 const RecipeDialog = React.createClass({
@@ -71,6 +72,9 @@ const RecipeDialog = React.createClass({
         <Modal show={this.props.showModal} onHide={this.close} >
           <Modal.Header closeButton>
             <Modal.Title><h4 class='title'>{this.props.title}</h4></Modal.Title>
+
+          </Modal.Header>
+          <Modal.Body>
             <FormControl
               id='titleRecipe'
               type="text"
@@ -79,8 +83,7 @@ const RecipeDialog = React.createClass({
               onChange={this.handleChangeTitle}
               />
             <FormControl.Feedback />
-          </Modal.Header>
-          <Modal.Body>
+
             <h4>Ingredients</h4>
             <FormControl
               id='ingredientsRecipe'
@@ -140,9 +143,14 @@ var Recipe=React.createClass({
     return (
       <Panel header={this.props.recipe.title} eventKey={this.props.recipe.id} >
        <ul className='list-group'> {listIngredients}</ul>
-          <Button bsStyle='info' onClick={this.editRecipe}>Edit</Button>
-          <Button bsStyle='warning' onClick={this.deleteRecipe}>Delete</Button>
-      </Panel>
+        <ButtonGroup>
+         <Button bsStyle='info' onClick={this.editRecipe}>Edit</Button>
+          </ButtonGroup>
+        <span class='between'>                             </span>
+        <ButtonGroup>
+          <Button bsStyle='warning' onClick={this.deleteRecipe} class='delete'>Delete</Button>
+      </ButtonGroup>
+        </Panel>
     )
 
   }
@@ -161,7 +169,7 @@ var RecipeList=React.createClass({
         <Recipe recipe={recipe} onDelete={this.props.onDelete} onEdit={this.props.onEdit} keyDel={recipe.id} />
       )
       });
-    return (<div>
+    return (<div class='mainbox'>
       <Accordion>
         {recipes}
       </Accordion>
@@ -246,9 +254,8 @@ var RecipeApp = React.createClass({
        Add recipe
      </Button>
 
-     <RecipeDialog showModal={this.state.showAddRecipe} title='Add recipe' onSave={this.handleNewRecipe} onClose={this.handleAddClose}/>
-     <RecipeDialog showModal={this.state.showEditRecipe} title='Edit recipe' onSave={this.handleEditRecipe} onClose={this.handleEditClose} recipe={this.state.recipe}/>
-
+     <RecipeDialog showModal={this.state.showAddRecipe} title='Add recipe' onSave={this.handleNewRecipe} onClose={this.handleAddClose} />
+       <RecipeDialog showModal={this.state.showEditRecipe} title='Edit recipe' onSave={this.handleEditRecipe} onClose={this.handleEditClose} recipe={this.state.recipe}/>
           </div>)
  }
 });
